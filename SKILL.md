@@ -39,15 +39,20 @@ python image_compressor.py <input...> [options]
 ### Behavior / Outputs
 
 - On success, prints a table per file: input path, output path, target format, input size (KB), output size (KB), and size delta (%). For multiple files it prints a TOTAL row and a summary line.
-- Exit codes: `0` success, `1` on errors (missing dependencies, missing input files), `130` on Ctrl+C.
+- Exit codes: `0` success, `1` on errors (missing dependencies, missing input files, invalid quality), `2` on CLI/argparse errors (e.g. unknown format), `130` on Ctrl+C.
 - Output format selection: PNG saves native alpha; JPG and lossy WEBP flatten alpha onto a white background and always produce RGB output.
 
 ### Error handling the agent must anticipate
 
 - **Missing Pillow** → script exits `1` with an install hint (`pip install Pillow`).
 - **Input file not found** → exits `1` listing all missing paths.
-- **Bad quality range** → argparse rejects values outside 1–100 automatically.
+- **Quality outside 1–100** → exits `1` with an explicit message (plus argparse rejects non-integers).
+- **Unknown format** → argparse rejects with exit code `2`.
 - The tool never overwrites an input file; it always writes to `--output`.
+
+### Tests / CI
+- Unit tests live in `test_image_compressor.py` (built-in `unittest`, no framework needed). Run with `python -m unittest test_image_compressor.py -v`.
+- GitHub Actions CI (`.github/workflows/ci.yml`) runs the tests and a CLI smoke test on every push/PR to `main` across Python 3.9–3.12.
 
 ---
 
