@@ -3,7 +3,7 @@
 Converts images to standard formats (JPG / PNG / WEBP) and compresses them locally with quality control — no external uploads, no quality-blind downscaling.
 
 - **Skill Name:** `image-compressor`
-- **Entry point:** `image_compressor.py`
+- **Startup / entry point:** `run.py` (recommended); core CLI in `image_compressor.py`
 - **Framework:** Python 3.9+ / Pillow
 - **Attribution:** Built and generated using IronClaw AI Agent.
 
@@ -11,7 +11,7 @@ Converts images to standard formats (JPG / PNG / WEBP) and compresses them local
 
 ## Purpose for an AI Agent (System Instructions / API)
 
-This skill is a local, dependency-light command-line utility that an AI agent (or a human) can invoke to convert image files between formats and/or reduce their size. It is designed to be driven programmatically, so the agent should treat `image_compressor.py` as a deterministic CLI **API** with the contract below.
+This skill is a local, dependency-light command-line utility that an AI agent (or a human) can invoke to convert image files between formats and/or reduce their size. It is designed to be driven programmatically, so the agent should treat `run.py` (which forwards to `image_compressor.main`) as a deterministic CLI **API** with the contract below. Use `python run.py` as the canonical invocation.
 
 ### When to use
 
@@ -24,8 +24,10 @@ Use this skill when the user:
 ### CLI API definition
 
 ```
-python image_compressor.py <input...> [options]
+python run.py <input...> [options]
 ```
+
+(`run.py` forwards all arguments identically to `image_compressor.py`; either script may be used, but `run.py` is the documented start-up entry point.)
 
 | Argument | Alias | Type | Default | Description |
 |----------|-------|------|---------|-------------|
