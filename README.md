@@ -41,29 +41,31 @@ source .venv/bin/activate   # Windows: .venv\Scripts\activate
 pip install -r requirements.txt
 ```
 
-No other setup required. Run it directly:
+No other setup required. Run it directly (either entry point works identically):
 
 ```bash
-python image_compressor.py --help
+python run.py --help
 ```
+
+`run.py` is the **recommended startup/entry file** — it's a thin wrapper that loads the sibling CLI and forwards every argument, so `python run.py <input> [options]` behaves exactly like `python image_compressor.py <input> [options]`.
 
 ## Usage
 
 ```bash
 # Convert a WEBP to PNG at default quality
-python image_compressor.py hero.webp -f png -o out/
+python run.py hero.webp -f png -o out/
 
 # Convert to JPG at 80% quality, shrink longest side to 1200px
-python image_compressor.py banner.webp -f jpg -q 80 -s 1200 -o out/
+python run.py banner.webp -f jpg -q 80 -s 1200 -o out/
 
 # Keep format, just compress (shrink file without changing extensions)
-python image_compressor.py photo.png -m compress -q 60 -o out/
+python run.py photo.png -m compress -q 60 -o out/
 
 # Batch: many files -> PNG, into one folder
-python image_compressor.py a.webp b.webp c.webp -f png -o out/
+python run.py a.webp b.webp c.webp -f png -o out/
 
 # Shell globs work too
-python image_compressor.py assets/*.webp -f jpg -q 85 -o out/
+python run.py assets/*.webp -f jpg -q 85 -o out/
 ```
 
 | Option | Short | Meaning | Default |
@@ -79,7 +81,7 @@ python image_compressor.py assets/*.webp -f jpg -q 85 -o out/
 A live run converting and compressing real files (source WEBP ~8.9 MB generated locally for the demo):
 
 ```text
-$ python image_compressor.py demo_source.webp -f jpg -q 85 -s 1600 -o out_web
+$ python run.py demo_source.webp -f jpg -q 85 -s 1600 -o out_web
 Input                                         Output                                     Fmt     In (KB)  Out (KB)     Δ %
 demo_source.webp                              out_web/demo_source.jpg                    jpg       8707.0     318.4  -96.3%
 Done.
@@ -88,7 +90,7 @@ Done.
 Batch compression of two files at quality 50 with the summary row:
 
 ```text
-$ python image_compressor.py demo_sample.png demo_sample2.jpg -f jpg -q 50 -o out_batch --mode compress
+$ python run.py demo_sample.png demo_sample2.jpg -f jpg -q 50 -o out_batch --mode compress
 Input                                         Output                                     Fmt     In (KB)  Out (KB)     Δ %
 demo_sample.png                               out_batch/demo_sample.jpg                    jpeg      715.1       1.8  -99.7%
 demo_sample2.jpg                              out_batch/demo_sample2.jpg                   jpeg       53.7       2.7  -94.9%
@@ -102,12 +104,13 @@ Done.
 
 ```
 ironclaw-image-compressor-skill/
-├── image_compressor.py        # The main CLI tool
-├── test_image_compressor.py   # Unit tests (built-in unittest)
-├── SKILL.md                   # Full skill spec: API, inputs/outputs, dependencies
-├── README.md                  # This file
-├── requirements.txt           # Pillow dependency
-├── .github/workflows/ci.yml   # GitHub Actions CI (test matrix + smoke test)
+├── run.py                      # Startup / run entry point (recommended)
+├── image_compressor.py         # The main CLI tool
+├── test_image_compressor.py    # Unit tests (built-in unittest)
+├── SKILL.md                    # Full skill spec: API, inputs/outputs, dependencies
+├── README.md                   # This file
+├── requirements.txt            # Pillow dependency
+├── .github/workflows/ci.yml    # GitHub Actions CI (test matrix + smoke test)
 └── .gitignore
 ```
 
@@ -118,7 +121,7 @@ On every push/PR to `main`, GitHub Actions runs the test suite across **Python 3
 ```bash
 # What CI runs
 python -m unittest test_image_compressor.py -v   # unit tests
-python image_compressor.py --help                 # CLI smoke test
+python run.py --help                             # CLI smoke test (startup entry)
 ```
 
 Run the same checks locally:
