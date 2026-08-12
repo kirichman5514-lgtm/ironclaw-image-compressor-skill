@@ -102,11 +102,29 @@ Done.
 
 ```
 ironclaw-image-compressor-skill/
-├── image_compressor.py   # The main CLI tool
-├── SKILL.md              # Full skill spec: API, inputs/outputs, dependencies
-├── README.md             # This file
-├── requirements.txt      # Pillow dependency
+├── image_compressor.py        # The main CLI tool
+├── test_image_compressor.py   # Unit tests (built-in unittest)
+├── SKILL.md                   # Full skill spec: API, inputs/outputs, dependencies
+├── README.md                  # This file
+├── requirements.txt           # Pillow dependency
+├── .github/workflows/ci.yml   # GitHub Actions CI (test matrix + smoke test)
 └── .gitignore
+```
+
+## Continuous Integration (CI)
+
+On every push/PR to `main`, GitHub Actions runs the test suite across **Python 3.9 – 3.12**:
+
+```bash
+# What CI runs
+python -m unittest test_image_compressor.py -v   # unit tests
+python image_compressor.py --help                 # CLI smoke test
+```
+
+Run the same checks locally:
+
+```bash
+python -m unittest test_image_compressor.py -v
 ```
 
 ## Attribution
