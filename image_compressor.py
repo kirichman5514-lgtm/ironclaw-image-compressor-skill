@@ -158,6 +158,8 @@ def convert_image(
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if not 1 <= args.quality <= 100:
+        sys.exit(f"Invalid quality {args.quality}: must be between 1 and 100.")
     fmt = "jpeg" if args.format in {"jpg", "jpeg"} else args.format
 
     srcs = [Path(p) for p in args.input]
